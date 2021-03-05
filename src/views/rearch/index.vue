@@ -5,8 +5,8 @@
         <el-col :span="12">
           <el-form-item label="专业" prop="studentMajor">
             <el-select v-model="formData.studentMajor" placeholder="请选择专业" clearable :style="{width: '100%'}">
-              <el-option v-for="(item, index) in studentMajorOptions" :key="index" :label="item.label"
-                         :value="item.value" :disabled="item.disabled"></el-option>
+              <el-option v-for="(item, index) in studentMajorOptions" :key="index" :label="item.dictLabel"
+                         :value="item.dictValue" :disabled="item.disabled"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
@@ -58,6 +58,9 @@
       this.getDicts("student_skill").then(response => {
         this.studentSkillOptions = response.data
       });
+      this.getDicts("student_major").then(response => {
+        this.studentMajorOptions = response.data
+      });
     },
     data() {
       return {
@@ -91,13 +94,7 @@
             trigger: 'blur'
           }]
         },
-        studentMajorOptions: [{
-          "label": "选项一",
-          "value": 1
-        }, {
-          "label": "选项二",
-          "value": 2
-        }],
+        studentMajorOptions: [],
         studentSkillOptions:[]
       }
     },
