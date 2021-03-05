@@ -48,7 +48,7 @@
   </div>
 </template>
 <script>
-  import {addRearch} from "../../api/rearch/rearch";
+  import { addRearch } from "../../api/rearch/rearch";
 
   export default {
     name: 'Rearch',

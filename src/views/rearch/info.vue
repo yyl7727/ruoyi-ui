@@ -27,21 +27,39 @@
         <el-table-column label="创建时间" align="center" prop="createTime" />
         <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
           <template slot-scope="scope">
-            <el-button size="mini" type="text" icon="el-icon-circle-plus-outline" @click="handleUpdate(scope.row)">邀请加入课题</el-button>
+            <el-button size="mini" type="text" icon="el-icon-circle-plus-outline" @click="handleInvite(scope.row)">邀请加入课题</el-button>
           </template>
         </el-table-column>
       </el-table>
+
+      <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+        <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+          <el-form-item label="课题名称" prop="taskName">
+            <el-select v-model="form.taskId" placeholder="请选择邀请进入的课题名称" clearable size="small">
+              <el-option v-for="(item, index) in taskOptions" :key="index" :label="item.taskName"
+                         :value="item.taskId" :disabled="item.disabled"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="submitForm">确 定</el-button>
+          <el-button @click="cancel">取 消</el-button>
+        </div>
+      </el-dialog>
     </div>
 </template>
 
 <script>
   import { listInfo } from "../../api/rearch/info";
+  import {listTaskByUserId} from "../../api/task/task";
 
   export default {
     name: 'info',
     created() {
+      listTaskByUserId(this.userId).then(response =>{
+        this.taskOptions = response.data
+      });
       this.getDicts("student_major").then(response => {
-        console.log(response.data)
         this.studentMajorOptions = response.data
       });
       this.getList();
@@ -60,6 +78,9 @@
         open: false,
         // 专业下拉列表数据
         studentMajorOptions: [],
+        // 课题下拉列表数据
+        taskOptions: [],
+        userId: this.$store.state.user.name,
         // 查询参数
         queryParams: {
           pageNum: 1,
@@ -67,6 +88,8 @@
           studentName: null,
           studentMajor: null
         },
+        // 表单参数
+        form: {},
       }
     },
     methods: {
@@ -87,10 +110,17 @@
         this.resetForm("queryForm");
         this.handleQuery();
       },
+      submitForm() {
+        this.$refs["form"].validate(valid => {
+          if (valid) {
+
+          }
+        });
+      },
+      handleInvite(row) {
+        this.title = "邀请加入课题";
+        this.open = true
+      }
     }
   }
 </script>
-
-<style scoped>
-
-</style>

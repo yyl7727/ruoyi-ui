@@ -62,3 +62,11 @@ export function listTask(query) {
     params: query
   })
 }
+
+//课题列表
+export function listTaskByUserId(userId) {
+  return request({
+    url: '/task/list/' + userId,
+    method: 'get'
+  })
+}
