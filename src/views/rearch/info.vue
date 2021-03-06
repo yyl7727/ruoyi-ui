@@ -34,7 +34,7 @@
 
       <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
         <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-          <el-form-item label="课题名称" prop="taskName">
+          <el-form-item label="课题名称" prop="taskId">
             <el-select v-model="form.taskId" placeholder="请选择邀请进入的课题名称" clearable size="small">
               <el-option v-for="(item, index) in taskOptions" :key="index" :label="item.taskName"
                          :value="item.taskId" :disabled="item.disabled"></el-option>
@@ -51,7 +51,7 @@
 
 <script>
   import { listInfo } from "../../api/rearch/info";
-  import {listTaskByUserId} from "../../api/task/task";
+  import {inviteIntoTask, listTaskByUserId} from "../../api/task/task";
 
   export default {
     name: 'info',
@@ -89,7 +89,13 @@
           studentMajor: null
         },
         // 表单参数
-        form: {},
+        form: {
+          taskId: undefined
+        },
+        // 表单验证规则
+        rules: {
+          taskId: [{ required: true, message: '请选择课题名称', trigger: 'change' }]
+        }
       }
     },
     methods: {
@@ -112,14 +118,34 @@
       },
       submitForm() {
         this.$refs["form"].validate(valid => {
+          console.log(this.form)
           if (valid) {
-
+            inviteIntoTask(this.form).then(response => {
+              this.msgSuccess("邀请发送成功");
+              this.reset();
+              this.open = false;
+            })
           }
         });
       },
       handleInvite(row) {
+        console.log(row.studentId)
         this.title = "邀请加入课题";
-        this.open = true
+        this.open = true;
+        this.form.studentUserName = row.studentId;
+      },
+      cancel() {
+        this.open = false;
+        this.reset();
+      },
+      reset() {
+        this.form = {
+          taskId: null
+        };
+        this.resetForm("form");
+      },
+      resetForm(form) {
+        this.$refs[form].resetFields();
       }
     }
   }

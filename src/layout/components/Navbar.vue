@@ -7,6 +7,9 @@
     <div class="right-menu">
       <template v-if="device!=='mobile'">
         <search id="header-search" class="right-menu-item" />
+        <el-badge is-dot class="right-menu-item">
+          <i class="el-icon-message" />
+        </el-badge>
       </template>
 
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
@@ -34,21 +37,13 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
-import Screenfull from '@/components/Screenfull'
-import SizeSelect from '@/components/SizeSelect'
 import Search from '@/components/HeaderSearch'
-import RuoYiGit from '@/components/RuoYi/Git'
-import RuoYiDoc from '@/components/RuoYi/Doc'
 
 export default {
   components: {
     Breadcrumb,
     Hamburger,
-    Screenfull,
-    SizeSelect,
     Search,
-    RuoYiGit,
-    RuoYiDoc
   },
   computed: {
     ...mapGetters([
@@ -108,6 +103,8 @@ export default {
     }
   }
 
+
+
   .breadcrumb-container {
     float: left;
   }
@@ -166,6 +163,9 @@ export default {
           font-size: 12px;
         }
       }
+    }
+    .el-badge {
+      .el-badge__content { margin-top:10px }
     }
   }
 }

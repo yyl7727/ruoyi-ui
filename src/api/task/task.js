@@ -70,3 +70,12 @@ export function listTaskByUserId(userId) {
     method: 'get'
   })
 }
+
+//邀请学生加入课题
+export function inviteIntoTask(data) {
+  return request({
+    url: '/task/invite',
+    method: 'post',
+    data: data
+  })
+}
