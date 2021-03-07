@@ -2,13 +2,15 @@
   <div class="navbar">
     <hamburger id="hamburger-container" :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
 
-    <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
+    <breadcrumb id="breadcrumb-container" class="breadcrumb-container"/>
 
     <div class="right-menu">
       <template v-if="device!=='mobile'">
         <search id="header-search" class="right-menu-item" />
-        <el-badge is-dot class="right-menu-item">
-          <i class="el-icon-message" />
+        <el-badge is-dot hidden="isDot" class="right-menu-item">
+          <router-link to="/system/notice">
+            <i class="el-icon-message" />
+          </router-link>
         </el-badge>
       </template>
 
@@ -40,6 +42,11 @@ import Hamburger from '@/components/Hamburger'
 import Search from '@/components/HeaderSearch'
 
 export default {
+  data() {
+    return {
+      isDot: false
+    }
+  },
   components: {
     Breadcrumb,
     Hamburger,
@@ -165,7 +172,11 @@ export default {
       }
     }
     .el-badge {
-      .el-badge__content { margin-top:10px }
+      ::v-deep .el-badge__content
+      {
+        margin-top:10px
+
+      }
     }
   }
 }
