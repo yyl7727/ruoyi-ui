@@ -34,19 +34,10 @@ export default {
     getBreadcrumb() {
       getNotRead().then(response => {
         if (response.data > 0){
-          console.log(0)
-          this.$store.dispatch('isDots/changeDot', {
-            key: 'isDot',
-            value: false
-          })
+          this.$store.commit('isDot/CHANGE_DOT', false)
         } else {
-          console.log(9)
-          this.$store.dispatch('isDots/changeDot', {
-            key: 'isDot',
-            value: true
-          })
+          this.$store.commit('isDot/CHANGE_DOT', true)
         }
-        console.log(this.$store.state.isDots.isDot)
       });
       // only show routes with meta.title
       let matched = this.$route.matched.filter(item => item.meta && item.meta.title)

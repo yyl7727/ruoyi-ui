@@ -12,5 +12,6 @@ const getters = {
   permissions: state => state.user.permissions,
   permission_routes: state => state.permission.routes,
   sidebarRouters:state => state.permission.sidebarRouters,
+  isDot:state => state.isDot.hide
 }
 export default getters

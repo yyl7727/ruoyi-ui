@@ -1,22 +1,15 @@
 const state = {
-  isDot: true
+  hide: true
 }
 
 const mutations = {
-  CHANGE_DOT(state, status = true) {
-    return state.isDots = status
-  }
-}
-
-const actions = {
-  changeDot({ commit }, status) {
-    commit('CHANGE_DOT', status)
+  CHANGE_DOT(state, status) {
+    return state.hide = status
   }
 }
 
 export default {
   namespaced: true,
   mutations,
-  actions,
   state
 }

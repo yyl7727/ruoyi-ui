@@ -42,11 +42,6 @@ import Hamburger from '@/components/Hamburger'
 import Search from '@/components/HeaderSearch'
 
 export default {
-  data() {
-    return {
-      isDot: this.$store.state.isDots.isDot
-    }
-  },
   components: {
     Breadcrumb,
     Hamburger,
@@ -58,6 +53,11 @@ export default {
       'avatar',
       'device'
     ]),
+    isDot: {
+      get() {
+        return this.$store.state.isDot.hide
+      }
+    },
     setting: {
       get() {
         return this.$store.state.settings.showSettings
