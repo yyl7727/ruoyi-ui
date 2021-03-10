@@ -22,7 +22,7 @@
         <el-table-column label="联系电话" align="center" prop="studentPhone" />
         <el-table-column label="电子邮箱" align="center" prop="studentEmail" />
         <el-table-column label="学生技术方向" align="center" prop="skill" :show-overflow-tooltip="true" />
-        <el-table-column label="个人简介" align="center" prop="studentDesc" />
+        <el-table-column label="个人简介" align="center" prop="studentDesc" :show-overflow-tooltip="true" />
         <el-table-column label="状态" align="center" prop="status" />
         <el-table-column label="创建时间" align="center" prop="createTime" />
         <el-table-column label="操作" align="center" class-name="small-padding fixed-width">

@@ -7,7 +7,7 @@
     <div class="right-menu">
       <template v-if="device!=='mobile'">
         <search id="header-search" class="right-menu-item" />
-        <el-badge is-dot hidden="isDot" class="right-menu-item">
+        <el-badge is-dot :hidden="isDot" class="right-menu-item">
           <router-link to="/system/notice">
             <i class="el-icon-message" />
           </router-link>
@@ -44,7 +44,7 @@ import Search from '@/components/HeaderSearch'
 export default {
   data() {
     return {
-      isDot: false
+      isDot: this.$store.state.isDots.isDot
     }
   },
   components: {

@@ -10,6 +10,8 @@
 </template>
 
 <script>
+import { getNotRead } from '../../api/system/notice'
+
 export default {
   data() {
     return {
@@ -30,6 +32,22 @@ export default {
   },
   methods: {
     getBreadcrumb() {
+      getNotRead().then(response => {
+        if (response.data > 0){
+          console.log(0)
+          this.$store.dispatch('isDots/changeDot', {
+            key: 'isDot',
+            value: false
+          })
+        } else {
+          console.log(9)
+          this.$store.dispatch('isDots/changeDot', {
+            key: 'isDot',
+            value: true
+          })
+        }
+        console.log(this.$store.state.isDots.isDot)
+      });
       // only show routes with meta.title
       let matched = this.$route.matched.filter(item => item.meta && item.meta.title)
       const first = matched[0]

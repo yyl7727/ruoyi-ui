@@ -26,6 +26,14 @@ export function addNotice(data) {
   })
 }
 
+// 获取未读公告数量
+export function getNotRead(data) {
+  return request({
+    url: '/system/notice/count',
+    method: 'get'
+  })
+}
+
 // 修改公告
 export function updateNotice(data) {
   return request({
