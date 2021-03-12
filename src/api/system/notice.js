@@ -50,3 +50,15 @@ export function delNotice(noticeId) {
     method: 'delete'
   })
 }
+
+// 设置公告阅读状态
+export function setRead(noticeId) {
+  const data = {
+    noticeId
+  }
+  return request({
+    url: '/system/notice/setRead',
+    method: 'put',
+    data: data
+  })
+}

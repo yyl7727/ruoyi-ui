@@ -79,3 +79,12 @@ export function inviteIntoTask(data) {
     data: data
   })
 }
+
+//邀请学生加入课题
+export function joinTask(data) {
+  return request({
+    url: '/task/join',
+    method: 'post',
+    data: data
+  })
+}

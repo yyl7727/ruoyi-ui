@@ -74,26 +74,13 @@
     <el-table v-loading="loading" :data="noticeList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="序号" align="center" prop="noticeId" width="100" />
-      <el-table-column
-        label="公告标题"
-        align="center"
-        prop="noticeTitle"
-        :show-overflow-tooltip="true"
-      />
-      <el-table-column
-        label="公告类型"
-        align="center"
-        prop="noticeType"
-        :formatter="typeFormat"
-        width="100"
-      />
-      <el-table-column
-        label="状态"
-        align="center"
-        prop="status"
-        :formatter="statusFormat"
-        width="100"
-      />
+      <el-table-column label="公告标题" align="center" prop="noticeTitle" :show-overflow-tooltip="true">
+        <template slot-scope="scope">
+          <a @click="handleView(scope.row)" style="color:blue;cursor:pointer">{{scope.row.noticeTitle}}</a>
+        </template>
+      </el-table-column>
+      <el-table-column label="公告类型" align="center" prop="noticeType" :formatter="typeFormat" width="100"/>
+      <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" width="100"/>
       <el-table-column label="创建者" align="center" prop="createBy" width="100" />
       <el-table-column label="创建时间" align="center" prop="createTime" width="100">
         <template slot-scope="scope">
@@ -102,20 +89,10 @@
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:notice:edit']"
-          >修改</el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['system:notice:remove']"
-          >删除</el-button>
+          <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:notice:edit']">修改</el-button>
+          <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)" v-hasPermi="['system:notice:remove']">删除</el-button>
+          <el-button size="mini" type="text" icon="el-icon-circle-check" v-if="scope.row.noticeType==='4'" @click="handleYes(scope.row)" v-hasPermi="['system:notice:yes']">同意</el-button>
+          <el-button size="mini" type="text" icon="el-icon-circle-close" v-if="scope.row.noticeType==='4'" @click="handleNo(scope.row)" v-hasPermi="['system:notice:no']">拒绝</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -168,8 +145,8 @@
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
+        <el-button type="primary" v-if="isEdit" @click="submitForm">确 定</el-button>
+        <el-button v-if="isEdit" @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
   </div>
@@ -178,6 +155,8 @@
 <script>
 import { listNotice, getNotice, delNotice, addNotice, updateNotice, exportNotice } from "@/api/system/notice";
 import Editor from '@/components/Editor';
+import { setRead } from '../../../api/system/notice'
+import { joinTask } from '../../../api/task/task'
 
 export default {
   name: "Notice",
@@ -204,6 +183,8 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      // 弹出层状态 查看或编辑
+      isEdit: false,
       // 类型数据字典
       statusOptions: [],
       // 状态数据字典
@@ -296,12 +277,24 @@ export default {
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
+      this.isEdit = true;
       this.reset();
       const noticeId = row.noticeId || this.ids
       getNotice(noticeId).then(response => {
         this.form = response.data;
         this.open = true;
         this.title = "修改公告";
+      });
+    },
+    handleView(row) {
+      this.isEdit = false;
+      this.reset();
+      const noticeId = row.noticeId
+      setRead(noticeId);
+      getNotice(noticeId).then(response => {
+        this.form = response.data;
+        this.open = true;
+        this.title = "查看公告";
       });
     },
     /** 提交按钮 */
@@ -337,6 +330,22 @@ export default {
           this.getList();
           this.msgSuccess("删除成功");
         })
+    },
+    handleYes(row) {
+      const noticeIds = row.noticeId || this.ids
+      this.$confirm('确认加入此课题？', "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(function() {
+        return joinTask(noticeIds);
+      }).then(() => {
+        this.getList();
+        this.msgSuccess("删除成功");
+      })
+    },
+    handleNo(row) {
+
     }
   }
 };
