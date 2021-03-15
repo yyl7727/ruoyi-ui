@@ -80,11 +80,20 @@ export function inviteIntoTask(data) {
   })
 }
 
-//邀请学生加入课题
+//加入课题
 export function joinTask(data) {
   return request({
     url: '/task/join',
-    method: 'post',
+    method: 'put',
+    data: data
+  })
+}
+
+//拒绝加入课题
+export function unJoinTask(data) {
+  return request({
+    url: '/task/unJoin',
+    method: 'put',
     data: data
   })
 }

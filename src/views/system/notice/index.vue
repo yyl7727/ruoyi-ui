@@ -91,19 +91,13 @@
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:notice:edit']">修改</el-button>
           <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)" v-hasPermi="['system:notice:remove']">删除</el-button>
-          <el-button size="mini" type="text" icon="el-icon-circle-check" v-if="scope.row.noticeType==='4'" @click="handleYes(scope.row)" v-hasPermi="['system:notice:yes']">同意</el-button>
-          <el-button size="mini" type="text" icon="el-icon-circle-close" v-if="scope.row.noticeType==='4'" @click="handleNo(scope.row)" v-hasPermi="['system:notice:no']">拒绝</el-button>
+          <el-button size="mini" type="text" icon="el-icon-circle-check" v-if="scope.row.noticeType==='4' && scope.row.status==='0'" @click="handleYes(scope.row)" v-hasPermi="['system:notice:yes']">同意</el-button>
+          <el-button size="mini" type="text" icon="el-icon-circle-close" v-if="scope.row.noticeType==='4' && scope.row.status==='0'" @click="handleNo(scope.row)" v-hasPermi="['system:notice:no']">拒绝</el-button>
         </template>
       </el-table-column>
     </el-table>
 
-    <pagination
-      v-show="total>0"
-      :total="total"
-      :page.sync="queryParams.pageNum"
-      :limit.sync="queryParams.pageSize"
-      @pagination="getList"
-    />
+    <pagination v-show="total>0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize" @pagination="getList"/>
 
     <!-- 添加或修改公告对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="780px" append-to-body>
@@ -156,7 +150,7 @@
 import { listNotice, getNotice, delNotice, addNotice, updateNotice, exportNotice } from "@/api/system/notice";
 import Editor from '@/components/Editor';
 import { setRead } from '../../../api/system/notice'
-import { joinTask } from '../../../api/task/task'
+import { joinTask, unJoinTask } from '../../../api/task/task'
 
 export default {
   name: "Notice",
@@ -287,6 +281,7 @@ export default {
       });
     },
     handleView(row) {
+      console.log(row)
       this.isEdit = false;
       this.reset();
       const noticeId = row.noticeId
@@ -341,11 +336,21 @@ export default {
         return joinTask(noticeIds);
       }).then(() => {
         this.getList();
-        this.msgSuccess("删除成功");
+        this.msgSuccess("加入课题成功");
       })
     },
     handleNo(row) {
-
+      const noticeIds = row.noticeId || this.ids
+      this.$confirm('拒绝加入此课题？', "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(function() {
+        return unJoinTask(noticeIds);
+      }).then(() => {
+        this.getList();
+        this.msgSuccess("操作成功");
+      })
     }
   }
 };
