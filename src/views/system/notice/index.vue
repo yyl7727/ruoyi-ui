@@ -266,6 +266,7 @@ export default {
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
+      this.isEdit = true;
       this.open = true;
       this.title = "添加公告";
     },
@@ -281,7 +282,6 @@ export default {
       });
     },
     handleView(row) {
-      console.log(row)
       this.isEdit = false;
       this.reset();
       const noticeId = row.noticeId
