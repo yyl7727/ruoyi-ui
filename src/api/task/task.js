@@ -97,3 +97,21 @@ export function unJoinTask(data) {
     data: data
   })
 }
+
+//加入课题
+export function joinTask1(data) {
+  return request({
+    url: '/task/join1',
+    method: 'put',
+    data: data
+  })
+}
+
+//拒绝加入课题
+export function unJoinTask1(data) {
+  return request({
+    url: '/task/unJoin1',
+    method: 'put',
+    data: data
+  })
+}

@@ -118,7 +118,6 @@
       },
       submitForm() {
         this.$refs["form"].validate(valid => {
-          console.log(this.form)
           if (valid) {
             inviteIntoTask(this.form).then(response => {
               this.msgSuccess("邀请发送成功");
@@ -129,7 +128,6 @@
         });
       },
       handleInvite(row) {
-        console.log(row.studentId)
         this.title = "邀请加入课题";
         this.open = true;
         this.form.studentUserName = row.studentId;

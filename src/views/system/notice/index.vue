@@ -89,10 +89,12 @@
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:notice:edit']">修改</el-button>
-          <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)" v-hasPermi="['system:notice:remove']">删除</el-button>
+          <el-button size="mini" type="text" icon="el-icon-edit" v-if="scope.row.noticeType !== '4' && scope.row.noticeType !== '5'" @click="handleUpdate(scope.row)" v-hasPermi="['system:notice:edit']">修改</el-button>
+          <el-button size="mini" type="text" icon="el-icon-delete" v-if="scope.row.noticeType !== '4' && scope.row.noticeType !== '5'" @click="handleDelete(scope.row)" v-hasPermi="['system:notice:remove']">删除</el-button>
           <el-button size="mini" type="text" icon="el-icon-circle-check" v-if="scope.row.noticeType==='4' && scope.row.status==='0'" @click="handleYes(scope.row)" v-hasPermi="['system:notice:yes']">同意</el-button>
           <el-button size="mini" type="text" icon="el-icon-circle-close" v-if="scope.row.noticeType==='4' && scope.row.status==='0'" @click="handleNo(scope.row)" v-hasPermi="['system:notice:no']">拒绝</el-button>
+          <el-button size="mini" type="text" icon="el-icon-circle-check" v-if="scope.row.noticeType==='5' && scope.row.status==='0'" @click="handleYes1(scope.row)" v-hasPermi="['system:notice:yes']">同意</el-button>
+          <el-button size="mini" type="text" icon="el-icon-circle-close" v-if="scope.row.noticeType==='5' && scope.row.status==='0'" @click="handleNo1(scope.row)" v-hasPermi="['system:notice:no']">拒绝</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -150,7 +152,7 @@
 import { listNotice, getNotice, delNotice, addNotice, updateNotice, exportNotice } from "@/api/system/notice";
 import Editor from '@/components/Editor';
 import { setRead } from '../../../api/system/notice'
-import { joinTask, unJoinTask } from '../../../api/task/task'
+import { joinTask, joinTask1, unJoinTask, unJoinTask1 } from '../../../api/task/task'
 
 export default {
   name: "Notice",
@@ -347,6 +349,32 @@ export default {
         type: "warning"
       }).then(function() {
         return unJoinTask(noticeIds);
+      }).then(() => {
+        this.getList();
+        this.msgSuccess("操作成功");
+      })
+    },
+    handleYes1(row) {
+      const noticeIds = row.noticeId || this.ids
+      this.$confirm('确认同意加入此课题？', "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(function() {
+        return joinTask1(noticeIds);
+      }).then(() => {
+        this.getList();
+        this.msgSuccess("加入课题成功");
+      })
+    },
+    handleNo1(row) {
+      const noticeIds = row.noticeId || this.ids
+      this.$confirm('拒绝加入此课题？', "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(function() {
+        return unJoinTask1(noticeIds);
       }).then(() => {
         this.getList();
         this.msgSuccess("操作成功");
