@@ -25,6 +25,13 @@ export function getTask(taskId) {
   })
 }
 
+export function getTaskByUserName(userName) {
+  return request({
+    url: '/task/getJoinedTask',
+    method: 'get'
+  })
+}
+
 //修改课题状态
 export function changeTaskStatus(taskId, status) {
   const data = {
