@@ -2,40 +2,12 @@
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
       <el-form-item label="课题名称" prop="taskId">
-<!--        <el-input-->
-<!--          v-model="queryParams.taskId"-->
-<!--          placeholder="请输入课题id"-->
-<!--          clearable-->
-<!--          size="small"-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
         <el-select v-model="queryParams.taskId" placeholder="--请选择--" clearable size="small">
-          <el-option v-for="(item, index) in taskOptions" :key="index" :label="item.taskName"
-                     :value="item.taskId"></el-option>
+          <el-option v-for="(item, index) in taskOptions" :key="index" :label="item.taskName" :value="item.taskId"/>
         </el-select>
       </el-form-item>
-      <el-form-item label="学生用户名" prop="studentUsername">
-        <el-input
-          v-model="queryParams.studentUsername"
-          placeholder="请输入学生用户名"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="状态 0待加入 1已加入" prop="status">
-        <el-select v-model="queryParams.status" placeholder="请选择状态 0待加入 1已加入" clearable size="small">
-          <el-option label="请选择字典生成" value="" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="是否删除 0未删除 1已删除" prop="isDelete">
-        <el-input
-          v-model="queryParams.isDelete"
-          placeholder="请输入是否删除 0未删除 1已删除"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="学生" prop="studentName">
+        <el-input v-model="queryParams.studentName" placeholder="请输入学生用户名" clearable size="small"/>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -45,46 +17,13 @@
 
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
-        <el-button
-          type="primary"
-          plain
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['system:member:add']"
-        >新增</el-button>
+        <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd">新增</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button
-          type="success"
-          plain
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['system:member:edit']"
-        >修改</el-button>
+        <el-button type="success" plain icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate">修改</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button
-          type="danger"
-          plain
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['system:member:remove']"
-        >删除</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          plain
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['system:member:export']"
-        >导出</el-button>
+        <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">删除</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
@@ -107,19 +46,13 @@
     <!-- 添加或修改课题成员对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="课题id" prop="taskId">
-          <el-input v-model="form.taskId" placeholder="请输入课题id" />
+        <el-form-item label="课题id" prop="taskId" style="width: 300px">
+          <el-select v-model="form.taskId" placeholder="--请选择--">
+            <el-option v-for="(item, index) in taskOptions" :key="index" :label="item.taskName" :value="item.taskId"/>
+          </el-select>
         </el-form-item>
-        <el-form-item label="学生用户名" prop="studentUsername">
-          <el-input v-model="form.studentUsername" placeholder="请输入学生用户名" />
-        </el-form-item>
-        <el-form-item label="状态 0待加入 1已加入">
-          <el-radio-group v-model="form.status">
-            <el-radio label="1">请选择字典生成</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="是否删除 0未删除 1已删除" prop="isDelete">
-          <el-input v-model="form.isDelete" placeholder="请输入是否删除 0未删除 1已删除" />
+        <el-form-item label="学生" prop="studentName" style="width: 300px">
+          <el-input v-model="form.studentName" placeholder="请输入学生用户名" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">

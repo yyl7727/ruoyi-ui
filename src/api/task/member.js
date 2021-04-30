@@ -20,7 +20,7 @@ export function getMember(id) {
 // 新增课题成员
 export function addMember(data) {
   return request({
-    url: '/system/member',
+    url: '/task/member/add',
     method: 'post',
     data: data
   })
