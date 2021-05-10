@@ -33,10 +33,10 @@
       <el-table-column label="课题名称" align="center" prop="taskName" />
       <el-table-column label="指导教师" align="center" prop="taskTeacher" />
       <el-table-column label="学生" align="center" prop="studentName" />
-      <el-table-column label="状态" align="center" prop="status" />
+      <el-table-column label="状态" align="center" prop="status" :formatter="statusFomatter" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button size="mini" type="text" icon="el-icon-wallet" @click="handleUpdate(scope.row)" v-if="scope.row.status === '1'">发放绩效</el-button>
+          <el-button size="mini" type="text" icon="el-icon-wallet" @click="handlePerformant(scope.row)" v-if="scope.row.status === '1'">发放绩效</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -60,12 +60,28 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+
+    <!-- 发放绩效对话框 -->
+    <el-dialog :title="title" :visible.sync="show" width="500px" append-to-body>
+      <el-form ref="form1" :model="form1" :rules="rules1" label-width="80px">
+        <el-form-item label="学生" prop="studentName" style="width: 300px">
+          <el-input v-model="form1.studentName" :disabled="true"/>
+        </el-form-item>
+        <el-form-item label="发放金额" prop="performant" style="width: 300px">
+          <el-input v-model="form1.performant" placeholder="请输入绩效金额" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitForm1">确 定</el-button>
+        <el-button @click="cancel1">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
   import { listMember, getMember, delMember, addMember, updateMember, exportMember } from '../../api/task/member';
-  import { listTaskByUserId } from '../../api/task/task'
+  import { addPerformant, listTaskByUserId } from '../../api/task/task'
 
   export default {
     name: "taskMember",
@@ -93,6 +109,7 @@
         title: "",
         // 是否显示弹出层
         open: false,
+        show: false,
         // 查询参数
         queryParams: {
           pageNum: 1,
@@ -104,10 +121,16 @@
         },
         // 表单参数
         form: {},
+        form1: {},
         // 表单校验
         rules: {
           taskId: [
             { required: true, message: "课题id不能为空", trigger: "blur" }
+          ],
+        },
+        rules1: {
+          performant: [
+            { required: true, message: "绩效金额不能为空", trigger: "blur" }
           ],
         }
       };
@@ -131,6 +154,10 @@
         this.open = false;
         this.reset();
       },
+      cancel1() {
+        this.show = false;
+        this.reset1();
+      },
       // 表单重置
       reset() {
         this.form = {
@@ -145,6 +172,21 @@
           updateTime: null
         };
         this.resetForm("form");
+      },
+      reset1() {
+        this.form1 = {
+          id: null,
+          taskId: null,
+          studentUsername: null,
+          performant: null,
+          status: "0",
+          isDelete: null,
+          createBy: null,
+          createTime: null,
+          updateBy: null,
+          updateTime: null
+        };
+        this.resetForm("form1");
       },
       /** 搜索按钮操作 */
       handleQuery() {
@@ -228,6 +270,32 @@
       getTaskByUserId(){
         listTaskByUserId(this.$store.state.user.name).then(response => {
             this.taskOptions = response.data;
+        });
+      },
+      statusFomatter(row) {
+        if (row.status === '0') {
+          return '待加入';
+        } else {
+          return '已加入';
+        }
+      },
+      handlePerformant(row) {
+        this.reset1();
+        const id = row.id || this.ids
+        getMember(id).then(response => {
+          this.form1 = response.data;
+          this.show = true;
+          this.title = "发放绩效";
+        });
+      },
+      submitForm1() {
+        this.$refs["form1"].validate(valid => {
+          if (valid) {
+            addPerformant(this.form1).then(response => {
+              this.msgSuccess("新增成功");
+              this.show = false;
+            });
+          }
         });
       }
     }

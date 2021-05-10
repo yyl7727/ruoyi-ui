@@ -12,7 +12,7 @@ export function listMember(query) {
 // 查询课题成员详细
 export function getMember(id) {
   return request({
-    url: '/system/member/' + id,
+    url: '/task/member/' + id,
     method: 'get'
   })
 }
@@ -29,7 +29,7 @@ export function addMember(data) {
 // 修改课题成员
 export function updateMember(data) {
   return request({
-    url: '/system/member',
+    url: '/task/member/update',
     method: 'put',
     data: data
   })

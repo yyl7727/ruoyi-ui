@@ -122,3 +122,12 @@ export function unJoinTask1(data) {
     data: data
   })
 }
+
+//新增课题
+export function addPerformant(data) {
+  return request({
+    url: '/task/performant',
+    method: 'post',
+    data: data
+  });
+}
